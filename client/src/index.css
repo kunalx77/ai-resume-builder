@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import "tailwindcss";
+
+/* Global font */
+* {
+  font-family: "Outfit", sans-serif;
+}
+
+/* Base styles */
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* Inputs  */
+  input:not([type="checkbox"]):not([type="file"]) {
+    @apply outline-none border border-gray-300 rounded-lg
+           focus:ring-2 focus:ring-blue-500
+           focus:border-blue-500;
+  }
+
+  textarea {
+    @apply outline-none border border-gray-300 rounded-lg resize-none
+           focus:ring-2 focus:ring-blue-500
+           focus:border-blue-500;
+  }
+}
+
+/* Print for Resume */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    background: white !important;
+  }
+}
+/* A4 PAGE */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #resume-preview,
+  #resume-preview * {
+    visibility: visible;
+  }
+
+  .resume-print-root {
+    position: absolute;
+    inset: 0;
+    background: white;
+  }
+
+  .resume-page {
+    width: 210mm;
+    height: 297mm;
+    max-height: 297mm;
+    overflow: hidden;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Prevent internal page breaks */
+  .resume-page * {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
