@@ -8,30 +8,40 @@ import resumeRouter from "./routes/resumeRoutes.js";
 import aiRouter from "./routes/aiRoutes.js";
 
 const app = express();
+
+
 const PORT = process.env.PORT || 2077;
 
-/*  MIDDLEWARES  */
+/* --------------------
+   MIDDLEWARES
+-------------------- */
 app.use(cors());
-app.use(express.json({ limit: "10mb" })); // for PDF text
+app.use(express.json({ limit: "10mb" }));
 
-/*  ROUTES  */
+/* --------------------
+   ROUTES
+-------------------- */
 app.get("/", (req, res) => {
-  res.send(" Server is Live...");
+  res.send("Server is Live ");
 });
 
 app.use("/api/users", userRouter);
 app.use("/api/resumes", resumeRouter);
-app.use("/api/newAi", aiRouter); //  only one AI route
+app.use("/api/ai", aiRouter);
 
-/*  SERVER START  */
+/* --------------------
+   START SERVER
+-------------------- */
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => {
-      console.log(` Server running on port ${PORT}`);
+
+    
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error(" Failed to start server:", error.message);
+    console.error("Failed to start server:", error.message);
     process.exit(1);
   }
 };
