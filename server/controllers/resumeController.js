@@ -122,30 +122,35 @@ export const updateResume = async (req, res) => {
     }
 
     // Parse resumeData safely
-    let dataToUpdate =
+    const dataToUpdate =
       typeof resumeData === "string"
         ? JSON.parse(resumeData)
-        : JSON.parse(JSON.stringify(resumeData));
+        : structuredClone(resumeData);
 
-    // Handle image upload
+    /* ---------- IMAGE UPLOAD (SAFE) ---------- */
     if (image) {
-      const uploadResponse = await imageKit.files.upload({
-        file: fs.createReadStream(image.path),
-        fileName: `resume-${Date.now()}.png`,
-        folder: "user-resumes",
-        transformation: {
-          pre:
-            "w-300,h-300,fo-face,z-0.75" +
-            (removeBackground ? ",e-bgremove" : ""),
-        },
-      });
+      if (!imageKit) {
+        // ImageKit not configured → skip upload
+        console.warn("ImageKit not configured, skipping image upload");
+      } else {
+        const uploadResponse = await imageKit.files.upload({
+          file: fs.createReadStream(image.path),
+          fileName: `resume-${Date.now()}.png`,
+          folder: "user-resumes",
+          transformation: {
+            pre:
+              "w-300,h-300,fo-face,z-0.75" +
+              (removeBackground ? ",e-bgremove" : ""),
+          },
+        });
 
-      dataToUpdate.personal_info = {
-        ...dataToUpdate.personal_info,
-        image: uploadResponse.url,
-      };
+        dataToUpdate.personal_info = {
+          ...dataToUpdate.personal_info,
+          image: uploadResponse.url,
+        };
+      }
 
-      // cleanup temp file
+      // cleanup temp file always
       fs.unlink(image.path, () => {});
     }
 
