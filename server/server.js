@@ -8,34 +8,24 @@ import resumeRouter from "./routes/resumeRoutes.js";
 import aiRouter from "./routes/aiRoutes.js";
 
 const app = express();
-const PORT = process.env.PORT || 2077;
+const PORT = process.env.PORT || 10000;
 
 /* --------------------
    MIDDLEWARES
 -------------------- */
-
-
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://ai-resume-builder-kx77.vercel.app/",
-      
+      "https://ai-resume-builder.vercel.app",
+      "https://ai-resume-builder-3k1wqcm57-kunal-patels-projects-0d561fc0.vercel.app"
     ],
-    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-/* ✅ Handle preflight requests safely */
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
-/* Body parser */
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json());
 
 /* --------------------
    ROUTES
@@ -54,7 +44,6 @@ app.use("/api/ai", aiRouter);
 const startServer = async () => {
   try {
     await connectDB();
-
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on port ${PORT}`);
     });
