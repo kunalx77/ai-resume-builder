@@ -24,7 +24,7 @@ import toast from "react-hot-toast";
       const prompt = `Enhance this professional resume summary:\n"${data}"`;
 
       const response = await api.post(
-        "/api/newAi/enhance-pro-sum",
+        "/api/ai/enhance-pro-sum",
         { userContent: prompt },
         {
           headers: {

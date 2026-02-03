@@ -52,7 +52,7 @@ const ExperienceForm = ({ data = [], onChange }) => {
 
     try {
       const response = await api.post(
-        "/api/newAi/enhance-job-desc",
+        "/api/ai/enhance-job-desc",
         { userContent: prompt },
         {
           headers: {
