@@ -1,4 +1,4 @@
-import newAi, { AI_MODEL } from "../configs/newAi.js";
+import newAi from "../configs/newAi.js";
 import Resume from "../models/Resume.js";
 
 /* ----------------------------------------
@@ -14,7 +14,7 @@ export const enhanceProfessionalSummary = async (req, res) => {
     }
 
     const response = await newAi.chat.completions.create({
-      model: AI_MODEL,
+      model: process.env.OPENAI_MODEL,
       messages: [
         {
           role: "system",
@@ -48,7 +48,7 @@ export const enhanceJobDescription = async (req, res) => {
     }
 
     const response = await newAi.chat.completions.create({
-      model: AI_MODEL,
+      model: process.env.OPENAI_MODEL,
       messages: [
         {
           role: "system",
@@ -85,58 +85,30 @@ export const uploadResume = async (req, res) => {
     }
 
     if (!resumeText?.trim() || !title?.trim()) {
-      return res.status(400).json({ message: "Resume text and title required" });
+      return res.status(400).json({
+        message: "Resume text and title required",
+      });
     }
 
-    const systemPrompt =
-      "You are an AI resume parser. Extract structured resume data and return ONLY valid JSON.";
-
-    const userPrompt = `
-Extract structured data from the resume below.
-Return strictly valid JSON in this format (no markdown, no explanation):
-
-{
-  "professional_summary": "",
-  "skills": [],
-  "personal_info": {
-    "image": "",
-    "full_name": "",
-    "profession": "",
-    "email": "",
-    "phone": "",
-    "location": "",
-    "linkedin": "",
-    "website": ""
-  },
-  "experience": [],
-  "project": [],
-  "education": []
-}
-
-Resume:
-${resumeText}
-`;
-
     const response = await newAi.chat.completions.create({
-      model: AI_MODEL,
+      model: process.env.OPENAI_MODEL,
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
+        {
+          role: "system",
+          content:
+            "You are an AI resume parser. Extract structured resume data and return ONLY valid JSON.",
+        },
+        {
+          role: "user",
+          content: resumeText,
+        },
       ],
       response_format: { type: "json_object" },
     });
 
-    let parsedData;
-    try {
-      parsedData = JSON.parse(
-        response.choices?.[0]?.message?.content || "{}"
-      );
-    } catch (err) {
-      console.error("AI JSON Parse Error:", err);
-      return res
-        .status(500)
-        .json({ message: "AI returned invalid resume data" });
-    }
+    const parsedData = JSON.parse(
+      response.choices?.[0]?.message?.content || "{}"
+    );
 
     const newResume = await Resume.create({
       userId,
