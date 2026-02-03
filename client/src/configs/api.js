@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://ai-resume-builder-backend-x24y.onrender.com",
-  withCredentials: true,
+  baseURL: import.meta.env.VITE_BASE_URL,
+  withCredentials: false, 
 });
 
 export default api;
