@@ -13,20 +13,13 @@ export const enhanceProfessionalSummary = async (req, res) => {
       return res.status(400).json({ message: "User content is required" });
     }
 
-    const response = await newAi.chat.completions.create({
-      model: process.env.OPENAI_MODEL,
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a professional resume writer. Enhance the given professional summary into 2–3 concise, ATS-friendly sentences highlighting skills, experience, and career goals. Return only the improved text.",
-        },
-        { role: "user", content: userContent },
-      ],
+    const response = await newAi.responses.create({
+      model: "gpt-4.1-mini",
+      input: `Rewrite this professional resume summary in 2–3 concise ATS-friendly sentences:\n${userContent}`,
     });
 
     const enhancedContent =
-      response.choices?.[0]?.message?.content?.trim() || "";
+      response.output_text?.trim();
 
     return res.status(200).json({ enhancedContent });
   } catch (error) {
@@ -34,6 +27,7 @@ export const enhanceProfessionalSummary = async (req, res) => {
     return res.status(500).json({ message: "Failed to enhance summary" });
   }
 };
+
 
 /* ----------------------------------------
    Enhance Job Description
