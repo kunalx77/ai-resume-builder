@@ -15,11 +15,22 @@ const PORT = process.env.PORT || 10000;
 -------------------- */
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://ai-resume-builder.vercel.app",
-      "https://ai-resume-builder-3k1wqcm57-kunal-patels-projects-0d561fc0.vercel.app"
-    ],
+    origin: (origin, callback) => {
+      // allow requests with no origin (Postman, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // allow localhost
+      if (origin.startsWith("http://localhost")) {
+        return callback(null, true);
+      }
+
+      // allow ALL Vercel deployments
+      if (origin.includes(".vercel.app")) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("CORS not allowed"), false);
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
