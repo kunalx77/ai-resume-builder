@@ -38,49 +38,53 @@ const ResumePreview = ({
 
       {/*  PRINT / PDF  */}
       <style>
-        {`
-        @page {
-          size: A4;
-          margin: 12mm;
-        }
+{`
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
 
-        @media print {
-          html,
-          body {
-            width: 210mm;
-            height: auto;
-            margin: 0;
-            padding: 0;
-          }
+  @media print {
+    html,
+    body {
+      width: 210mm;
+      height: 297mm;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
 
-          body * {
-            visibility: hidden;
-          }
+    body * {
+      visibility: hidden;
+    }
 
-          #resume-preview,
-          #resume-preview * {
-            visibility: visible;
-          }
+    #resume-preview,
+    #resume-preview * {
+      visibility: visible;
+    }
 
-          #resume-preview {
-            position: relative;
-            width: 100%;
-            min-height: auto;
-            overflow: visible !important;
-            box-shadow: none !important;
-            border: none !important;
-          }
+    #resume-preview {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 210mm;
+      height: 297mm;
+      padding: 0;
+      margin: 0;
+      overflow: hidden; 
+      box-shadow: none !important;
+      border: none !important;
+    }
 
-          /* prevent bottom cut */
-          section,
-          article,
-          .resume-section {
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-        }
-      `}
-      </style>
+    /* Prevent accidental breaks */
+    section,
+    div {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
+`}
+</style>
     </div>
   );
 };
