@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
@@ -14,77 +14,83 @@ const TEMPLATE_MAP = {
   sidebar: SidebarTemplate,
 };
 
+const A4_HEIGHT_PX = 1122; // safe printable height
+
 const ResumePreview = ({
   data,
   template = "classic",
   accentColor,
   classes = "",
 }) => {
-  const SelectedTemplate =
-    TEMPLATE_MAP[template] || ClassicTemplate;
+  const SelectedTemplate = TEMPLATE_MAP[template] || ClassicTemplate;
+  const previewRef = useRef(null);
+
+  useEffect(() => {
+    const el = previewRef.current;
+    if (!el) return;
+
+    // reset scale
+    el.style.transform = "scale(1)";
+    el.style.transformOrigin = "top center";
+
+    const contentHeight = el.scrollHeight;
+
+    if (contentHeight > A4_HEIGHT_PX) {
+      const scale = A4_HEIGHT_PX / contentHeight;
+      el.style.transform = `scale(${scale})`;
+    }
+  }, [data, template]);
 
   return (
-    <div className="resume-print-root bg-gray-100 py-6">
+    <div className="resume-print-root">
       <div
         id="resume-preview"
-        className={`resume-page bg-white mx-auto ${classes}`}
-        style={{ maxWidth: "210mm" }}
+        ref={previewRef}
+        className={`resume-page bg-white ${classes}`}
       >
-        <SelectedTemplate
-          data={data}
-          accentColor={accentColor}
-        />
+        <SelectedTemplate data={data} accentColor={accentColor} />
       </div>
 
-      {/*  PRINT / PDF  */}
+      {/* PRINT RULES */}
       <style>
-{`
-  @page {
-    size: A4;
-    margin: 8mm;
-  }
+        {`
+          @page {
+            size: A4;
+            margin: 8mm;
+          }
 
-  @media print {
-    html,
-    body {
-      width: 210mm;
-      height: 297mm;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
+          @media print {
+            html,
+            body {
+              width: 210mm;
+              height: 297mm;
+              margin: 0;
+              padding: 0;
+              overflow: hidden;
+            }
 
-    body * {
-      visibility: hidden;
-    }
+            body * {
+              visibility: hidden;
+            }
 
-    #resume-preview,
-    #resume-preview * {
-      visibility: visible;
-    }
+            #resume-preview,
+            #resume-preview * {
+              visibility: visible;
+            }
 
-    #resume-preview {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 210mm;
-      height: 297mm;
-      padding: 0;
-      margin: 0;
-      overflow: hidden; 
-      box-shadow: none !important;
-      border: none !important;
-    }
-
-    /* Prevent accidental breaks */
-    section,
-    div {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-  }
-`}
-</style>
+            #resume-preview {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 210mm;
+              min-height: 297mm;
+              overflow: hidden;
+              box-shadow: none !important;
+              border: none !important;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };
