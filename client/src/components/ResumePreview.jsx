@@ -24,16 +24,63 @@ const ResumePreview = ({
     TEMPLATE_MAP[template] || ClassicTemplate;
 
   return (
-    <div className="resume-print-root">
+    <div className="resume-print-root bg-gray-100 py-6">
       <div
         id="resume-preview"
-        className={`resume-page bg-white ${classes}`}
+        className={`resume-page bg-white mx-auto ${classes}`}
+        style={{ maxWidth: "210mm" }}
       >
         <SelectedTemplate
           data={data}
           accentColor={accentColor}
         />
       </div>
+
+      {/*  PRINT / PDF  */}
+      <style>
+        {`
+        @page {
+          size: A4;
+          margin: 12mm;
+        }
+
+        @media print {
+          html,
+          body {
+            width: 210mm;
+            height: auto;
+            margin: 0;
+            padding: 0;
+          }
+
+          body * {
+            visibility: hidden;
+          }
+
+          #resume-preview,
+          #resume-preview * {
+            visibility: visible;
+          }
+
+          #resume-preview {
+            position: relative;
+            width: 100%;
+            min-height: auto;
+            overflow: visible !important;
+            box-shadow: none !important;
+            border: none !important;
+          }
+
+          /* prevent bottom cut */
+          section,
+          article,
+          .resume-section {
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
+        }
+      `}
+      </style>
     </div>
   );
 };
