@@ -1,7 +1,13 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const newAi = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+if (!process.env.GEMINI_API_KEY) {
+  console.warn("⚠️ GEMINI_API_KEY not configured. AI disabled.");
+}
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+export const geminiModel = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
 });
 
-export default newAi;
+export default geminiModel;
