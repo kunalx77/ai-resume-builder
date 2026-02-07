@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
@@ -14,8 +14,6 @@ const TEMPLATE_MAP = {
   sidebar: SidebarTemplate,
 };
 
-const A4_HEIGHT_PX = 1122; // safe printable height
-
 const ResumePreview = ({
   data,
   template = "classic",
@@ -23,30 +21,16 @@ const ResumePreview = ({
   classes = "",
 }) => {
   const SelectedTemplate = TEMPLATE_MAP[template] || ClassicTemplate;
-  const previewRef = useRef(null);
-
-  useEffect(() => {
-    const el = previewRef.current;
-    if (!el) return;
-
-    // reset scale
-    el.style.transform = "scale(1)";
-    el.style.transformOrigin = "top center";
-
-    const contentHeight = el.scrollHeight;
-
-    if (contentHeight > A4_HEIGHT_PX) {
-      const scale = A4_HEIGHT_PX / contentHeight;
-      el.style.transform = `scale(${scale})`;
-    }
-  }, [data, template]);
 
   return (
-    <div className="resume-print-root">
+    <div className="resume-print-root flex justify-center bg-gray-100 py-6">
       <div
         id="resume-preview"
-        ref={previewRef}
-        className={`resume-page bg-white ${classes}`}
+        className={`bg-white ${classes}`}
+        style={{
+          width: "210mm",
+          padding: "0",
+        }}
       >
         <SelectedTemplate data={data} accentColor={accentColor} />
       </div>
@@ -56,17 +40,15 @@ const ResumePreview = ({
         {`
           @page {
             size: A4;
-            margin: 8mm;
+            margin: 10mm;
           }
 
           @media print {
             html,
             body {
-              width: 210mm;
-              height: 297mm;
               margin: 0;
               padding: 0;
-              overflow: hidden;
+              background: white;
             }
 
             body * {
@@ -83,10 +65,16 @@ const ResumePreview = ({
               top: 0;
               left: 0;
               width: 210mm;
-              min-height: 297mm;
-              overflow: hidden;
               box-shadow: none !important;
               border: none !important;
+            }
+
+            /* Prevent section cuts */
+            section,
+            article,
+            div {
+              break-inside: avoid;
+              page-break-inside: avoid;
             }
           }
         `}

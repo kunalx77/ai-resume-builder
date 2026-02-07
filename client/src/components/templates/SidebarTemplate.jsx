@@ -11,25 +11,26 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
   };
 
   return (
-    <div
-      className="w-full bg-white text-gray-800 grid grid-cols-3"
-      style={{ minHeight: "297mm" }}
-    >
+    <div className="w-full bg-white text-gray-800 grid grid-cols-3">
+
       {/* ================= LEFT SIDEBAR ================= */}
       <aside
-        className="col-span-1 p-6 text-white flex flex-col"
+        className="col-span-1 p-6 text-white flex flex-col break-inside-avoid"
         style={{ backgroundColor: accentColor }}
       >
-        <h1 className="text-2xl font-bold leading-tight">
-          {data.personal_info?.full_name || "Your Name"}
-        </h1>
+        {/* NAME */}
+        <div className="mb-6 break-inside-avoid">
+          <h1 className="text-2xl font-bold leading-tight">
+            {data.personal_info?.full_name || "Your Name"}
+          </h1>
 
-        <p className="text-sm opacity-90 mb-6">
-          {data.personal_info?.profession || "Professional Title"}
-        </p>
+          <p className="text-sm opacity-90">
+            {data.personal_info?.profession || "Professional Title"}
+          </p>
+        </div>
 
         {/* CONTACT */}
-        <section className="mb-6">
+        <section className="mb-6 break-inside-avoid">
           <h2 className="text-xs uppercase tracking-widest mb-3 opacity-80">
             Contact
           </h2>
@@ -78,7 +79,7 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
         {/* SKILLS — NEVER CUT */}
         {Array.isArray(data.skills) && data.skills.length > 0 && (
-          <section className="mt-auto">
+          <section className="break-inside-avoid">
             <h2 className="text-xs uppercase tracking-widest mb-3 opacity-80">
               Skills
             </h2>
@@ -94,9 +95,10 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
       {/* ================= RIGHT CONTENT ================= */}
       <main className="col-span-2 p-8 flex flex-col">
+
         {/* SUMMARY */}
         {data.professional_summary && (
-          <section className="mb-6">
+          <section className="mb-6 break-inside-avoid">
             <h2
               className="text-sm uppercase tracking-widest font-semibold mb-2"
               style={{ color: accentColor }}
@@ -121,12 +123,12 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
             <div className="space-y-4">
               {data.experience.map((exp, index) => (
-                <div key={index}>
+                <div key={index} className="break-inside-avoid">
                   <div className="flex justify-between text-sm">
                     <h3 className="font-semibold text-gray-900">
                       {exp.position}
                     </h3>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 whitespace-nowrap">
                       {formatDate(exp.start_date)} –{" "}
                       {exp.is_current
                         ? "Present"
@@ -154,7 +156,7 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
         {/* PROJECTS */}
         {Array.isArray(data.project) && data.project.length > 0 && (
-          <section className="mb-6">
+          <section className="mb-6 break-inside-avoid">
             <h2
               className="text-sm uppercase tracking-widest font-semibold mb-3"
               style={{ color: accentColor }}
@@ -164,7 +166,7 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
             <div className="space-y-3">
               {data.project.map((proj, index) => (
-                <div key={index}>
+                <div key={index} className="break-inside-avoid">
                   <h3 className="text-sm font-medium text-gray-900">
                     {proj.name}
                   </h3>
@@ -181,7 +183,7 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
         {/* EDUCATION */}
         {Array.isArray(data.education) && data.education.length > 0 && (
-          <section className="mt-auto">
+          <section className="break-inside-avoid">
             <h2
               className="text-sm uppercase tracking-widest font-semibold mb-3"
               style={{ color: accentColor }}
@@ -191,7 +193,7 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
             <div className="space-y-3 text-sm">
               {data.education.map((edu, index) => (
-                <div key={index} className="flex justify-between">
+                <div key={index} className="flex justify-between break-inside-avoid">
                   <div>
                     <p className="font-medium text-gray-900">
                       {edu.degree} {edu.field && `in ${edu.field}`}
@@ -200,7 +202,7 @@ const SidebarTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
                       {edu.institution}
                     </p>
                   </div>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
                     {formatDate(edu.graduation_date)}
                   </span>
                 </div>

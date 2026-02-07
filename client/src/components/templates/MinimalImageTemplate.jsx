@@ -11,7 +11,7 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
     });
   };
 
-  /* Image handling (SAFE) */
+  /* SAFE image handling */
   const imageUrl = useMemo(() => {
     const img = data.personal_info?.image;
     if (!img) return null;
@@ -29,11 +29,11 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
   }, [imageUrl]);
 
   return (
-    <div className="w-full h-full bg-white text-zinc-800 print:min-h-[297mm]">
-      <div className="grid grid-cols-3 h-full">
+    <div className="w-full bg-white text-zinc-800 text-sm">
 
-        {/* IMAGE COLUMN */}
-        <div className="col-span-1 pt-6 pb-4 flex justify-center print:items-center print:pt-10">
+      {/* HEADER ROW */}
+      <div className="grid grid-cols-3">
+        <div className="col-span-1 flex justify-center pt-6">
           {imageUrl && (
             <img
               src={imageUrl}
@@ -44,41 +44,44 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
           )}
         </div>
 
-        {/* NAME + TITLE */}
-        <div className="col-span-2 flex flex-col justify-center pt-6 pb-4 px-8">
+        <div className="col-span-2 pt-6 px-8">
           <h1 className="text-3xl font-bold tracking-widest text-zinc-700">
             {data.personal_info?.full_name || "Your Name"}
           </h1>
-          <p className="uppercase text-zinc-600 font-medium text-sm tracking-widest mt-1">
+          <p className="uppercase text-zinc-600 font-medium tracking-widest mt-1">
             {data.personal_info?.profession || "Profession"}
           </p>
         </div>
+      </div>
 
-        {/* LEFT SIDEBAR */}
-        <aside className="col-span-1 border-r border-zinc-300 px-6 pb-6 pt-2">
+      {/* BODY */}
+      <div className="grid grid-cols-3">
+
+        {/* SIDEBAR */}
+        <aside className="col-span-1 px-6 py-6 border-r border-zinc-300">
 
           {/* CONTACT */}
-          <section className="mb-6">
-            <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
+          <section className="mb-6 break-inside-avoid">
+            <h2 className="text-xs font-semibold tracking-widest text-zinc-600 mb-3">
               CONTACT
             </h2>
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2">
               {data.personal_info?.phone && (
                 <div className="flex items-center gap-2">
                   <Phone size={14} style={{ color: accentColor }} />
-                  <span>{data.personal_info.phone}</span>
+                  {data.personal_info.phone}
                 </div>
               )}
               {data.personal_info?.email && (
                 <div className="flex items-center gap-2">
                   <Mail size={14} style={{ color: accentColor }} />
-                  <span>{data.personal_info.email}</span>
+                  {data.personal_info.email}
                 </div>
               )}
               {data.personal_info?.location && (
                 <div className="flex items-center gap-2">
                   <MapPin size={14} style={{ color: accentColor }} />
-                  <span>{data.personal_info.location}</span>
+                  {data.personal_info.location}
                 </div>
               )}
             </div>
@@ -86,11 +89,11 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
           {/* EDUCATION */}
           {Array.isArray(data.education) && data.education.length > 0 && (
-            <section className="mb-6">
-              <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
+            <section className="mb-6 break-inside-avoid">
+              <h2 className="text-xs font-semibold tracking-widest text-zinc-600 mb-3">
                 EDUCATION
               </h2>
-              <div className="space-y-3 text-sm">
+              <div className="space-y-3">
                 {data.education.map((edu, index) => (
                   <div key={index}>
                     <p className="font-semibold uppercase">{edu.degree}</p>
@@ -104,34 +107,34 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
             </section>
           )}
 
-          {/* SKILLS */}
+          {/* SKILLS — GUARANTEED VISIBLE */}
           {Array.isArray(data.skills) && data.skills.length > 0 && (
-            <section>
-              <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
+            <section className="break-inside-avoid">
+              <h2 className="text-xs font-semibold tracking-widest text-zinc-600 mb-3">
                 SKILLS
               </h2>
-              <ul className="space-y-1 text-sm">
+              <div className="leading-relaxed">
                 {data.skills.map((skill, index) => (
-                  <li key={index}>{skill}</li>
+                  <div key={index}>• {skill}</div>
                 ))}
-              </ul>
+              </div>
             </section>
           )}
         </aside>
 
-        {/* RIGHT CONTENT */}
-        <main className="col-span-2 px-8 pb-6 pt-2">
+        {/* MAIN CONTENT */}
+        <main className="col-span-2 px-8 py-6">
 
           {/* SUMMARY */}
           {data.professional_summary && (
-            <section className="mb-6">
+            <section className="mb-6 break-inside-avoid">
               <h2
-                className="text-sm font-semibold tracking-widest mb-2"
+                className="text-xs font-semibold tracking-widest mb-2"
                 style={{ color: accentColor }}
               >
                 SUMMARY
               </h2>
-              <p className="text-zinc-700 leading-relaxed text-sm">
+              <p className="text-zinc-700 leading-relaxed">
                 {data.professional_summary}
               </p>
             </section>
@@ -139,33 +142,33 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
           {/* EXPERIENCE */}
           {Array.isArray(data.experience) && data.experience.length > 0 && (
-            <section>
+            <section className="mb-6">
               <h2
-                className="text-sm font-semibold tracking-widest mb-3"
+                className="text-xs font-semibold tracking-widest mb-3"
                 style={{ color: accentColor }}
               >
                 EXPERIENCE
               </h2>
 
-              <div className="space-y-4 mb-6">
+              <div className="space-y-4">
                 {data.experience.map((exp, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-semibold text-zinc-900 text-sm">
+                  <div key={index} className="break-inside-avoid">
+                    <div className="flex justify-between">
+                      <p className="font-semibold">
                         {exp.position}
-                      </h3>
-                      <span className="text-xs text-zinc-500">
+                      </p>
+                      <span className="text-xs text-zinc-500 whitespace-nowrap">
                         {formatDate(exp.start_date)} –{" "}
                         {exp.is_current ? "Present" : formatDate(exp.end_date)}
                       </span>
                     </div>
 
-                    <p className="text-sm mb-1" style={{ color: accentColor }}>
+                    <p className="text-xs mb-1" style={{ color: accentColor }}>
                       {exp.company}
                     </p>
 
                     {exp.description && (
-                      <ul className="list-disc list-inside text-sm text-zinc-700 space-y-1">
+                      <ul className="list-disc list-inside text-zinc-700 space-y-1">
                         {exp.description.split("\n").map((line, i) => (
                           <li key={i}>{line}</li>
                         ))}
@@ -179,9 +182,9 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
 
           {/* PROJECTS */}
           {Array.isArray(data.project) && data.project.length > 0 && (
-            <section>
+            <section className="break-inside-avoid">
               <h2
-                className="text-sm font-semibold tracking-widest"
+                className="text-xs font-semibold tracking-widest mb-2"
                 style={{ color: accentColor }}
               >
                 PROJECTS
@@ -190,22 +193,9 @@ const MinimalImageTemplate = ({ data = {}, accentColor = "#16a34a" }) => {
               <div className="space-y-3">
                 {data.project.map((project, index) => (
                   <div key={index}>
-                    <h3 className="text-sm font-medium text-zinc-800 mt-2">
-                      {project.name}
-                    </h3>
-
-                    {project.type && (
-                      <p className="text-sm mb-1" style={{ color: accentColor }}>
-                        {project.type}
-                      </p>
-                    )}
-
+                    <p className="font-medium">{project.name}</p>
                     {project.description && (
-                      <ul className="list-disc list-inside text-sm text-zinc-700 space-y-1">
-                        {project.description.split("\n").map((line, i) => (
-                          <li key={i}>{line}</li>
-                        ))}
-                      </ul>
+                      <p className="text-zinc-700">{project.description}</p>
                     )}
                   </div>
                 ))}
