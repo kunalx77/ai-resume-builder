@@ -129,7 +129,7 @@ ${resumeText}
 
     const result = await geminiModel.generateContent(prompt);
 
-    const rawText =
+    let rawText =
       result?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
       result?.response?.text?.();
 
@@ -139,11 +139,17 @@ ${resumeText}
       });
     }
 
+    // ✅ CRITICAL FIX: CLEAN GEMINI OUTPUT
+    const cleanedText = rawText
+      .replace(/```json/gi, "")
+      .replace(/```/g, "")
+      .trim();
+
     let parsedData;
     try {
-      parsedData = JSON.parse(rawText);
+      parsedData = JSON.parse(cleanedText);
     } catch (err) {
-      console.error("Gemini JSON Parse Error:", rawText);
+      console.error("❌ GEMINI RAW OUTPUT:\n", rawText);
       return res.status(500).json({
         message: "AI returned invalid resume JSON",
       });
